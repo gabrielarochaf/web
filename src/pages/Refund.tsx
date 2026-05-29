@@ -4,6 +4,7 @@ import { Select } from "../components/Select";
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/categories";
 import { Upload } from "../components/Upload";
 import { Button } from "../components/Button";
+import { useNavigate } from "react-router";
 
 export function Refund() {
   const [category, setCategory] = useState("");
@@ -12,16 +13,19 @@ export function Refund() {
   const [isLoading, setIsLoading] = useState(false);
   const [filename, setFileneme] = useState<File | null>(null);
 
+  const navigate = useNavigate()
+  
+  
   function onSubmit(e: React.SubmitEvent) {
     e.preventDefault();
-    console.log(name, amount, category, filename);
+    navigate("/confirm", {state: {fromSubmit: true}})
   }
 
   return (
     <form
       onSubmit={onSubmit}
       className="bg-gray-500 w-full rounded-xl flex flex-col p-10 
-                         gap-6 lg:min-w-lg"
+                  gap-6 lg:min-w-lg"
     >
       <header>
         <h1 className="text-xl font-bold text-gray-100">
