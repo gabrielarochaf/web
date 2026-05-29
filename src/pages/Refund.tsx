@@ -2,11 +2,24 @@ import { useState } from "react";
 import { Input } from "../components/Input";
 import { Select } from "../components/Select";
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/categories";
+import { Upload } from "../components/Upload";
+import { Button } from "../components/Button";
 
 export function Refund() {
-  const [category, setCategory] = useState("")
-    return (
+  const [category, setCategory] = useState("");
+  const [name, setName] = useState("");
+  const [amount, setAmount] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [filename, setFileneme] = useState<File | null>(null);
+
+  function onSubmit(e: React.SubmitEvent) {
+    e.preventDefault();
+    console.log(name, amount, category, filename);
+  }
+
+  return (
     <form
+      onSubmit={onSubmit}
       className="bg-gray-500 w-full rounded-xl flex flex-col p-10 
                          gap-6 lg:min-w-lg"
     >
@@ -19,17 +32,41 @@ export function Refund() {
         </p>
       </header>
 
-      <Input required legend="Nome da solicitação" />
-      
-      <div className="flex gap-4">
-      <Select required legend="Categoria" value={category} onChange={(e) => setCategory(e.target.value)}>
-        {CATEGORIES_KEYS.map((category) => (
-          <option key={category}>{CATEGORIES[category].name}</option>
-        ))}
-      </Select>
+      <Input
+        required
+        legend="Nome da solicitação"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
 
-      <Input legend="Valor" required />
+      <div className="flex gap-4">
+        <Select
+          required
+          legend="Categoria"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          {CATEGORIES_KEYS.map((category) => (
+            <option key={category}>{CATEGORIES[category].name}</option>
+          ))}
+        </Select>
+
+        <Input
+          legend="Valor"
+          required
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
       </div>
+
+      <Upload
+        filename={filename && filename.name}
+        onChange={(e) => e.target.files && setFileneme(e.target.files[0])}
+      />
+
+      <Button type="submit" isLoading={isLoading}>
+        Enviar
+      </Button>
     </form>
   );
 }
