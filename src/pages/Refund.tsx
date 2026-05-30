@@ -5,20 +5,24 @@ import { CATEGORIES, CATEGORIES_KEYS } from "../utils/categories";
 import { Upload } from "../components/Upload";
 import { Button } from "../components/Button";
 import { useNavigate } from "react-router";
+import { useParams } from "react-router";
 
 export function Refund() {
-  const [category, setCategory] = useState("");
-  const [name, setName] = useState("");
-  const [amount, setAmount] = useState("");
+  const [category, setCategory] = useState("Transport");
+  const [name, setName] = useState("R");
+  const [amount, setAmount] = useState("34");
   const [isLoading, setIsLoading] = useState(false);
   const [filename, setFileneme] = useState<File | null>(null);
 
-  const navigate = useNavigate()
-  
-  
+  const navigate = useNavigate();
+  const params = useParams<{ id: string }>();
+
   function onSubmit(e: React.SubmitEvent) {
     e.preventDefault();
-    navigate("/confirm", {state: {fromSubmit: true}})
+    if (params.id) {
+      return navigate(-1);
+    }
+    navigate("/confirm", { state: { fromSubmit: true } });
   }
 
   return (
@@ -41,6 +45,7 @@ export function Refund() {
         legend="Nome da solicitação"
         value={name}
         onChange={(e) => setName(e.target.value)}
+        disabled={!!params.id}
       />
 
       <div className="flex gap-4">
@@ -49,6 +54,7 @@ export function Refund() {
           legend="Categoria"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
+          disabled={!!params.id}
         >
           {CATEGORIES_KEYS.map((category) => (
             <option key={category}>{CATEGORIES[category].name}</option>
@@ -60,6 +66,7 @@ export function Refund() {
           required
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
+          disabled={!!params.id}
         />
       </div>
 
@@ -69,7 +76,7 @@ export function Refund() {
       />
 
       <Button type="submit" isLoading={isLoading}>
-        Enviar
+        {params.id ? "Voltar" : "Enviar"}
       </Button>
     </form>
   );
